@@ -6,15 +6,10 @@ namespace Rede_Neural
     {
         static void Main(string[] args)
         {
-            Matriz m1 = new Matriz(1, 2);
-            Matriz m2 = new Matriz(2, 1);
+            RedeNeural rn = new RedeNeural(1, 3, 5);
+            int[] arr = new int[2] { 1, 2 };
 
-            Matriz.PrintMatriz(m1);
-            Matriz.PrintMatriz(m2);
-
-            var m = Matriz.Multiply(m1, m2);
-
-            Matriz.PrintMatriz(m);
+            rn.FeedFoward(arr);
         }
     }
 }

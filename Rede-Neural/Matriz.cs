@@ -8,20 +8,42 @@ namespace Rede_Neural
     {
         private int Linhas;
         private int Colunas;
-        public int[,] Dados;
+        public double[,] Dados;
 
         public Matriz(int Linhas, int Colunas)
         {
             this.Linhas = Linhas;
             this.Colunas = Colunas;
-            this.Dados = new int[Linhas, Colunas];
-
-            Random rand = new Random();
+            this.Dados = new double[Linhas, Colunas];
 
             for (int i = 0; i < Linhas; i++)
             {
                 for (int j = 0; j < Colunas; j++)
-                    this.Dados[i, j] = rand.Next(1, 9);
+                    this.Dados[i, j] = 0;
+            }
+        }
+
+        public void Print()
+        {
+            for (int i = 0; i < this.Linhas; i++)
+            {
+                for (int j = 0; j < this.Colunas; j++)
+                    Console.Write(this.Dados[i, j] + " ");
+
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+        }
+
+        public void Randomize()
+        {
+            Random rand = new Random();
+
+            for (int i = 0; i < this.Linhas; i++)
+            {
+                for (int j = 0; j < this.Colunas; j++)
+                    this.Dados[i, j] = rand.Next(0, 3) * 2 - 1;
             }
         }
 
@@ -42,7 +64,7 @@ namespace Rede_Neural
         {
             var matriz = new Matriz(A.Linhas, B.Colunas);
 
-            int Soma = 0;
+            double Soma = 0;
 
             for (int i = 0; i < A.Linhas; i++)
             {
@@ -50,8 +72,8 @@ namespace Rede_Neural
                 {
                     for (int k = 0; k < B.Colunas; k++)
                     {
-                        int Elmt1 = A.Dados[i, j];
-                        int Elmt2 = B.Dados[j, k];
+                        double Elmt1 = A.Dados[i, j];
+                        double Elmt2 = B.Dados[j, k];
 
                         Soma += Elmt1 * Elmt2;
                     }
@@ -63,15 +85,27 @@ namespace Rede_Neural
             return matriz;
         }
 
-        public static void PrintMatriz(Matriz m)
+        public static Matriz ArrayToMatriz(int[] array)
         {
-            for (int i = 0; i < m.Linhas; i++)
-            {
-                for (int j = 0; j < m.Colunas; j++)
-                    Console.Write(m.Dados[i, j] + " ");
+            var matriz = new Matriz(array.Length, 1);
 
-                Console.WriteLine();
-            }
+            for (int i = 0; i < matriz.Linhas; i++)
+                for (int j = 0; j < matriz.Colunas; j++)
+                    matriz.Dados[i, j] = array[i];
+
+            return matriz;
+        }
+
+        public static float Sigmoid(double value)
+        {
+            return 1.0f / (1.0f + (float)Math.Exp(-value));
+        }
+
+        public void MapSigmoid()
+        {
+            for (int i = 0; i < this.Linhas; i++)
+                for (int j = 0; j < this.Colunas; j++)
+                    this.Dados[i, j] = Sigmoid(this.Dados[i, j]);
         }
     }
 }
