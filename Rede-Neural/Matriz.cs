@@ -42,19 +42,23 @@ namespace Rede_Neural
         {
             var matriz = new Matriz(A.Linhas, B.Colunas);
 
+            int Soma = 0;
+
             for (int i = 0; i < A.Linhas; i++)
             {
                 for (int j = 0; j < A.Colunas; j++)
                 {
                     for (int k = 0; k < B.Colunas; k++)
                     {
-                        int Elm1 = A.Dados[i, j];
-                        int Elm2 = B.Dados[k, j];
+                        int Elmt1 = A.Dados[i, j];
+                        int Elmt2 = B.Dados[j, k];
 
-                        matriz.Dados[i, k] = Elm1 * Elm2;
+                        Soma += Elmt1 * Elmt2;
                     }
                 }
             }
+
+            matriz.Dados[0, 0] = Soma;
 
             return matriz;
         }
