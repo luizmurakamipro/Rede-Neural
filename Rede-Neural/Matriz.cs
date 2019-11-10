@@ -43,8 +43,45 @@ namespace Rede_Neural
             for (int i = 0; i < this.Linhas; i++)
             {
                 for (int j = 0; j < this.Colunas; j++)
-                    this.Dados[i, j] = rand.Next(0, 3) * 2 - 1;
+                    this.Dados[i, j] = rand.NextDouble() * 2 - 1;
             }
+        }
+
+        public static Matriz Transpose(Matriz A)
+        {
+            var matriz = new Matriz(A.Colunas, A.Linhas);
+
+            for (int i = 0; i < A.Linhas; i++)
+                for (int j = 0; j < A.Colunas; j++)
+                    matriz.Dados[j, i] = A.Dados[i, j];
+
+            return matriz;
+        }
+
+        public static Matriz EscalarMultiply(Matriz A, double escalar)
+        {
+            var matriz = new Matriz(A.Linhas, A.Colunas);
+
+            for (int i = 0; i < A.Linhas; i++)
+            {
+                for (int j = 0; j < A.Colunas; j++)
+                    matriz.Dados[i, j] = A.Dados[i, j] * escalar;
+            }
+
+            return matriz;
+        }
+
+        public static Matriz Hadamard(Matriz A, Matriz B)
+        {
+            var matriz = new Matriz(A.Linhas, A.Colunas);
+
+            for (int i = 0; i < A.Linhas; i++)
+            {
+                for (int j = 0; j < A.Colunas; j++)
+                    matriz.Dados[i, j] = A.Dados[i, j] * B.Dados[i, j];
+            }
+
+            return matriz;
         }
 
         public static Matriz Add(Matriz A, Matriz B)
@@ -55,6 +92,19 @@ namespace Rede_Neural
             {
                 for (int j = 0; j < A.Colunas; j++)
                     matriz.Dados[i, j] = A.Dados[i, j] + B.Dados[i, j];
+            }
+
+            return matriz;
+        }
+
+        public static Matriz Subtract(Matriz A, Matriz B)
+        {
+            var matriz = new Matriz(A.Linhas, A.Colunas);
+
+            for (int i = 0; i < A.Linhas; i++)
+            {
+                for (int j = 0; j < A.Colunas; j++)
+                    matriz.Dados[i, j] = A.Dados[i, j] - B.Dados[i, j];
             }
 
             return matriz;
@@ -76,11 +126,11 @@ namespace Rede_Neural
                         double Elmt2 = B.Dados[j, k];
 
                         Soma += Elmt1 * Elmt2;
+
+                        matriz.Dados[i, k] = Soma;
                     }
                 }
             }
-
-            matriz.Dados[0, 0] = Soma;
 
             return matriz;
         }
@@ -96,9 +146,33 @@ namespace Rede_Neural
             return matriz;
         }
 
+        public static double[] MatrizToArray(Matriz matriz)
+        {
+            double[] array = new double[matriz.Linhas * matriz.Colunas];
+
+            int max = matriz.Linhas * matriz.Colunas;
+            int k = 0;
+
+            for (int i = 0; i < matriz.Linhas; i++)
+                for (int j = 0; j < matriz.Colunas; j++)
+                {
+                    if (k < max)
+                        array[k++] = matriz.Dados[i, j];
+                    else
+                        break;
+                }
+
+            return array;
+        }
+
         public static float Sigmoid(double value)
         {
             return 1.0f / (1.0f + (float)Math.Exp(-value));
+        }
+
+        public static float DerivedSigmoid(double value)
+        {
+            return (float)value * (1.0f - (float)value);
         }
 
         public void MapSigmoid()
@@ -106,6 +180,15 @@ namespace Rede_Neural
             for (int i = 0; i < this.Linhas; i++)
                 for (int j = 0; j < this.Colunas; j++)
                     this.Dados[i, j] = Sigmoid(this.Dados[i, j]);
+        }
+
+        public static Matriz MapDerivedSigmoid(Matriz m)
+        {
+            for (int i = 0; i < m.Linhas; i++)
+                for (int j = 0; j < m.Colunas; j++)
+                    m.Dados[i, j] = DerivedSigmoid(m.Dados[i, j]);
+
+            return m;
         }
     }
 }

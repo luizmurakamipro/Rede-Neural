@@ -14,6 +14,8 @@ namespace Rede_Neural
         private Matriz Pesos_EntradaOculto;
         private Matriz Pesos_OcultoSaida;
 
+        private double TaxaAprendizado;
+
         public RedeNeural(int Entrada, int Oculto, int Saida)
         {
             this.Entrada = Entrada;
@@ -30,12 +32,14 @@ namespace Rede_Neural
 
             this.Pesos_OcultoSaida = new Matriz(this.Saida, this.Oculto);
             this.Pesos_OcultoSaida.Randomize();
+
+            this.TaxaAprendizado = 0.1;
         }
 
-        public void FeedFoward(int[] Entrada)
+        public void Train(int[] ArrayEntrada, int[] ArraySaida)
         {
             // Entrada para Oculta
-            Matriz matrizEntrada = Matriz.ArrayToMatriz(Entrada);
+            Matriz matrizEntrada = Matriz.ArrayToMatriz(ArrayEntrada);
             Matriz matrizOculta = Matriz.Multiply(this.Pesos_EntradaOculto, matrizEntrada);
             matrizOculta = Matriz.Add(matrizOculta, this.BIAS_EntradaOculto);
             matrizOculta.MapSigmoid();
@@ -45,7 +49,57 @@ namespace Rede_Neural
             matrizSaida = Matriz.Add(matrizSaida, this.BIAS_OcultoSaida);
             matrizSaida.MapSigmoid();
 
-            matrizSaida.Print();
+            // BackPropagation ->
+
+            // Saida para Oculta
+            Matriz matrizEsperada = Matriz.ArrayToMatriz(ArraySaida);
+            Matriz matrizErroSaida = Matriz.Subtract(matrizEsperada, matrizSaida);
+            Matriz matrizSaidaDerivada = Matriz.MapDerivedSigmoid(matrizSaida);
+            Matriz matrizOcultaTransposta = Matriz.Transpose(matrizOculta);
+
+            Matriz matrizGradiente = Matriz.Hadamard(matrizSaidaDerivada, matrizErroSaida);
+            matrizGradiente = Matriz.EscalarMultiply(matrizGradiente, this.TaxaAprendizado);
+
+            // Ajustar a BIAS
+            this.BIAS_OcultoSaida = Matriz.Add(this.BIAS_OcultoSaida, matrizGradiente);
+
+            // Ajustar os Pesos
+            Matriz matrizDeltaPesoOcultaSaida = Matriz.Multiply(matrizGradiente, matrizOcultaTransposta);
+            this.Pesos_OcultoSaida = Matriz.Add(this.Pesos_OcultoSaida, matrizDeltaPesoOcultaSaida);
+
+            // Oculta para Entrada
+            Matriz matrizPesoSaidaOcultaTransposta = Matriz.Transpose(this.Pesos_OcultoSaida);
+            Matriz matrizErroOculta = Matriz.Multiply(matrizPesoSaidaOcultaTransposta, matrizErroSaida);
+            Matriz matrizOcultaDerivada = Matriz.MapDerivedSigmoid(matrizOculta);
+            Matriz matrizEntradaTransposta = Matriz.Transpose(matrizEntrada);
+
+            Matriz matrizOcultaGradiente = Matriz.Hadamard(matrizOcultaDerivada, matrizErroOculta);
+            matrizOcultaGradiente = Matriz.EscalarMultiply(matrizOcultaGradiente, this.TaxaAprendizado);
+
+            // Ajustar a BIAS
+            this.BIAS_EntradaOculto = Matriz.Add(this.BIAS_EntradaOculto, matrizOcultaGradiente);
+
+            // Ajustar os Pesos
+            Matriz matrizDeltaPesoEntradaOculto = Matriz.Multiply(matrizOcultaGradiente, matrizEntradaTransposta);
+            this.Pesos_EntradaOculto = Matriz.Add(this.Pesos_EntradaOculto, matrizDeltaPesoEntradaOculto);
+        }
+
+        public double[] Predict(int[] ArrayEntrada)
+        {
+            // Entrada para Oculta
+            Matriz matrizEntrada = Matriz.ArrayToMatriz(ArrayEntrada);
+
+            Matriz matrizOculta = Matriz.Multiply(this.Pesos_EntradaOculto, matrizEntrada);
+            matrizOculta = Matriz.Add(matrizOculta, this.BIAS_EntradaOculto);
+            matrizOculta.MapSigmoid();
+
+            // Oculta para Saida
+            Matriz matrizSaida = Matriz.Multiply(this.Pesos_OcultoSaida, matrizOculta);
+            matrizSaida = Matriz.Add(matrizSaida, this.BIAS_OcultoSaida);
+            matrizSaida.MapSigmoid();
+            double[] ArraySaida = Matriz.MatrizToArray(matrizSaida);
+
+            return ArraySaida;
         }
     }
 }
