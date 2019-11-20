@@ -12,31 +12,34 @@ namespace Rede_Neural
             RedeNeural rn = new RedeNeural(2, 3, 1);
             Random rand = new Random();
 
-            StreamReader sr = new StreamReader("rede.txt");
-
-            string[] ArrayString = new string[2];
-            int Count = 0;
-
-            while (sr.EndOfStream != true)
+            if (File.Exists("rede.txt"))
             {
-                ArrayString[Count++] = sr.ReadLine();
-            }
+                StreamReader sr = new StreamReader("rede.txt");
 
-            var temp = ArrayString[0].Split(';');
-            var Array1 = Array.ConvertAll<string, double>(temp, double.Parse);
+                string[] ArrayString = new string[2];
+                int Count = 0;
 
-            temp = ArrayString[1].Split(';');
-            var Array2 = Array.ConvertAll<string, double>(temp, double.Parse);
+                while (sr.EndOfStream != true)
+                {
+                    ArrayString[Count++] = sr.ReadLine();
+                }
 
-            Matriz m1 = Matriz.ArrayToMatriz(Array1, 3);
-            m1.Print();
-            Matriz m2 = Matriz.ArrayToMatriz(Array2, 1);
-            m2.Print();
+                var temp = ArrayString[0].Split(';');
+                var Array1 = Array.ConvertAll<string, double>(temp, double.Parse);
 
-            rn.SetPesoEntradaOculto(m1);
-            rn.SetPesoOcultoSaida(m2);
+                temp = ArrayString[1].Split(';');
+                var Array2 = Array.ConvertAll<string, double>(temp, double.Parse);
 
-            sr.Close();
+                Matriz m1 = Matriz.ArrayToMatriz(Array1, 3);
+                m1.Print();
+                Matriz m2 = Matriz.ArrayToMatriz(Array2, 1);
+                m2.Print();
+
+                rn.SetPesoEntradaOculto(m1);
+                rn.SetPesoOcultoSaida(m2);
+
+                sr.Close();
+             }
 
             int[] ArrayEntrada = new int[2] { 0, 0 };
             int[] ArrayEsperado = new int[2] { 1, 0 };
