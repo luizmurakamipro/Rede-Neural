@@ -28,10 +28,10 @@ namespace Rede_Neural
             this.BIAS_OcultoSaida.Randomize();
 
             this.Pesos_EntradaOculto = new Matriz(this.Oculto, this.Entrada);
-            //this.Pesos_EntradaOculto.Randomize();
+            this.Pesos_EntradaOculto.Randomize();
 
             this.Pesos_OcultoSaida = new Matriz(this.Saida, this.Oculto);
-            //this.Pesos_OcultoSaida.Randomize();
+            this.Pesos_OcultoSaida.Randomize();
 
             this.TaxaAprendizado = 0.1;
         }
