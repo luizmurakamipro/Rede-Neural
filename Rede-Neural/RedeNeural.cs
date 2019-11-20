@@ -28,14 +28,35 @@ namespace Rede_Neural
             this.BIAS_OcultoSaida.Randomize();
 
             this.Pesos_EntradaOculto = new Matriz(this.Oculto, this.Entrada);
-            this.Pesos_EntradaOculto.Randomize();
+            //this.Pesos_EntradaOculto.Randomize();
 
             this.Pesos_OcultoSaida = new Matriz(this.Saida, this.Oculto);
-            this.Pesos_OcultoSaida.Randomize();
+            //this.Pesos_OcultoSaida.Randomize();
 
             this.TaxaAprendizado = 0.1;
         }
 
+        public void SetPesoEntradaOculto(Matriz Peso)
+        {
+            this.Pesos_EntradaOculto = Peso;
+        }
+
+        public void SetPesoOcultoSaida(Matriz Peso)
+        {
+            this.Pesos_OcultoSaida = Peso;
+        }
+
+        public Matriz GetPesoEntradaOculto()
+        {
+            return this.Pesos_EntradaOculto;
+        }
+
+        public Matriz GetPesoOcultoSaida()
+        {
+            return this.Pesos_OcultoSaida;
+        }
+
+        // Função responsável por treinar a rede neural, utilizando backpropagation
         public void Train(int[] ArrayEntrada, int[] ArraySaida)
         {
             // Entrada para Oculta
@@ -84,6 +105,7 @@ namespace Rede_Neural
             this.Pesos_EntradaOculto = Matriz.Add(this.Pesos_EntradaOculto, matrizDeltaPesoEntradaOculto);
         }
 
+        // Função responsável por retornar uma predição do aprendizado da rede neural
         public double[] Predict(int[] ArrayEntrada)
         {
             // Entrada para Oculta

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 
 namespace Rede_Neural
@@ -10,6 +11,32 @@ namespace Rede_Neural
             bool Train = true;
             RedeNeural rn = new RedeNeural(2, 3, 1);
             Random rand = new Random();
+
+            StreamReader sr = new StreamReader("rede.txt");
+
+            string[] ArrayString = new string[2];
+            int Count = 0;
+
+            while (sr.EndOfStream != true)
+            {
+                ArrayString[Count++] = sr.ReadLine();
+            }
+
+            var temp = ArrayString[0].Split(';');
+            var Array1 = Array.ConvertAll<string, double>(temp, double.Parse);
+
+            temp = ArrayString[1].Split(';');
+            var Array2 = Array.ConvertAll<string, double>(temp, double.Parse);
+
+            Matriz m1 = Matriz.ArrayToMatriz(Array1, 3);
+            m1.Print();
+            Matriz m2 = Matriz.ArrayToMatriz(Array2, 1);
+            m2.Print();
+
+            rn.SetPesoEntradaOculto(m1);
+            rn.SetPesoOcultoSaida(m2);
+
+            sr.Close();
 
             int[] ArrayEntrada = new int[2] { 0, 0 };
             int[] ArrayEsperado = new int[2] { 1, 0 };
@@ -55,6 +82,34 @@ namespace Rede_Neural
                 {
                     Train = false;
                     Console.WriteLine("Terminou!");
+
+                    rn.GetPesoEntradaOculto().Print();
+                    rn.GetPesoOcultoSaida().Print();
+
+                    double[] PesoEntradaOculto = Matriz.MatrizToArray(rn.GetPesoEntradaOculto());
+                    double[] PesoOcultoSaida = Matriz.MatrizToArray(rn.GetPesoOcultoSaida());
+
+                    StreamWriter sm = new StreamWriter("rede.txt");
+
+                    for (int i = 0; i < PesoEntradaOculto.Length; i++)
+                    {
+                        if (i == PesoEntradaOculto.Length - 1)
+                            sm.Write(PesoEntradaOculto[i]);
+                        else
+                            sm.Write(PesoEntradaOculto[i] + ";");
+                    }
+
+                    sm.WriteLine();
+
+                    for (int i = 0; i < PesoOcultoSaida.Length; i++)
+                    {
+                        if (i == PesoOcultoSaida.Length - 1)
+                            sm.Write(PesoOcultoSaida[i]);
+                        else
+                            sm.Write(PesoOcultoSaida[i] + ";");
+                    }
+
+                    sm.Close();
                 }
             }
         }
