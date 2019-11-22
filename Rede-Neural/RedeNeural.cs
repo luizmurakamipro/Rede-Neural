@@ -104,7 +104,7 @@ namespace Rede_Neural
             Matriz matrizDeltaPesoEntradaOculto = Matriz.Multiply(matrizOcultaGradiente, matrizEntradaTransposta);
             this.Pesos_EntradaOculto = Matriz.Add(this.Pesos_EntradaOculto, matrizDeltaPesoEntradaOculto);
         }
-
+        
         // Função responsável por retornar uma predição do aprendizado da rede neural
         public double[] Predict(int[] ArrayEntrada)
         {
@@ -119,8 +119,8 @@ namespace Rede_Neural
             Matriz matrizSaida = Matriz.Multiply(this.Pesos_OcultoSaida, matrizOculta);
             matrizSaida = Matriz.Add(matrizSaida, this.BIAS_OcultoSaida);
             matrizSaida.MapSigmoid();
-            double[] ArraySaida = Matriz.MatrizToArray(matrizSaida);
 
+            double[] ArraySaida = Matriz.MatrizToArray(matrizSaida);
             return ArraySaida;
         }
     }

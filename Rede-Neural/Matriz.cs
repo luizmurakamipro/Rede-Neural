@@ -63,6 +63,7 @@ namespace Rede_Neural
             return matriz;
         }
 
+        // Multiplica todos os valores da matriz pelo valor escalar
         public static Matriz EscalarMultiply(Matriz A, double escalar)
         {
             var matriz = new Matriz(A.Linhas, A.Colunas);
@@ -76,6 +77,7 @@ namespace Rede_Neural
             return matriz;
         }
 
+        // Multiplica uma matriz pela outra
         public static Matriz Hadamard(Matriz A, Matriz B)
         {
             var matriz = new Matriz(A.Linhas, A.Colunas);
@@ -92,6 +94,10 @@ namespace Rede_Neural
         public static Matriz Add(Matriz A, Matriz B)
         {
             var matriz = new Matriz(A.Linhas, A.Colunas);
+          // // int Linhas = A.Linhas;
+
+          //  if (A.Linhas > B.Linhas)
+          //      Linhas = B.Linhas;
 
             for (int i = 0; i < A.Linhas; i++)
             {
@@ -115,6 +121,7 @@ namespace Rede_Neural
             return matriz;
         }
 
+        // Multiplica a matriz por coluna
         public static Matriz Multiply(Matriz A, Matriz B)
         {
             var matriz = new Matriz(A.Linhas, B.Colunas);

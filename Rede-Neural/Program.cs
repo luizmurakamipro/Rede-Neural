@@ -65,7 +65,7 @@ namespace Rede_Neural
             {
                 for (int i = 0; i < 10000; i++)
                 {
-                    int Linha = rand.Next(4);
+                    int Linha = rand.Next(0, 4);
                     int[] entradaArray = new int[2];
                     entradaArray[0] = datasetEntrada[Linha, 0];
                     entradaArray[1] = datasetEntrada[Linha, 1];
